@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.todoapp.Fragments.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_addTaskeFragment"
+            app:destination="@id/addTaskeFragment"
+            app:enterAnim="@anim/top_animation" />
+        <action
+            android:id="@+id/action_homeFragment_to_taskDetailsFragment"
+            app:destination="@id/taskDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addTaskeFragment"
+        android:name="com.example.todoapp.Fragments.AddTaskeFragment"
+        android:label="fragment_add_taske"
+        tools:layout="@layout/fragment_add_taske" >
+        <action
+            android:id="@+id/action_addTaskeFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:enterAnim="@android:anim/slide_in_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/completedTaskesFragment"
+        android:name="com.example.todoapp.Fragments.CompletedTaskesFragment"
+        android:label="fragment_completed_taskes"
+        tools:layout="@layout/fragment_completed_taskes" />
+    <fragment
+        android:id="@+id/todayTaskesFragment"
+        android:name="com.example.todoapp.Fragments.TodayTaskesFragment"
+        android:label="fragment_today"
+        tools:layout="@layout/fragment_today" />
+    <fragment
+        android:id="@+id/stickyNotesFragment"
+        android:name="com.example.todoapp.Fragments.StickyNotesFragment"
+        android:label="fragment_sticky_notes"
+        tools:layout="@layout/fragment_sticky_notes" >
+        <action
+            android:id="@+id/action_stickyNotesFragment_to_addNotesFragment"
+            app:destination="@id/addNotesFragment"
+            app:popEnterAnim="@anim/bottom_animation" />
+    </fragment>
+    <fragment
+        android:id="@+id/addNotesFragment"
+        android:name="com.example.todoapp.Fragments.AddNotesFragment"
+        android:label="fragment_add_notes"
+        tools:layout="@layout/fragment_add_notes" >
+        <action
+            android:id="@+id/action_addNotesFragment_to_stickyNotesFragment"
+            app:destination="@id/stickyNotesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/taskDetailsFragment"
+        android:name="com.example.todoapp.Fragments.TaskDetailsFragment"
+        android:label="fragment_task_details"
+        tools:layout="@layout/fragment_task_details" />
+</navigation>

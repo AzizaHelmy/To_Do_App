@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/purple_500"
+    tools:context=".Fragments.AddTaskeFragment">
+    <!--#3C3B3B-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="7dp"
+        android:background="#4A4747">
+
+        <EditText
+            android:id="@+id/add_task_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:layout_marginTop="150dp"
+            android:layout_marginRight="7dp"
+            android:fontFamily="sans-serif"
+            android:textColor="#fff"
+            android:hint="@string/hint"
+            android:textColorHint="@color/ohh"
+            android:textSize="35sp"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/add_task_butt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:layout_marginBottom="67dp"
+            android:background="@color/purple_500"
+            android:clickable="true"
+            android:padding="3dp"
+            android:shadowColor="#fff"
+            android:shadowRadius="33"
+            android:text="Add"
+            android:textAllCaps="false"
+            android:textColor="#313131"
+            android:textSize="23sp"
+            app:layout_constraintEnd_toEndOf="@id/add_task_et"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_task_et" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
