@@ -2,11 +2,12 @@ package com.example.todoapp.Async2;
 
 import android.os.AsyncTask;
 
+import com.example.todoapp.Models.NotesModel;
 import com.example.todoapp.Models.TaskesModel;
 import com.example.todoapp.RoomDB.TaskesDao;
 
 
-public class DeleteAsyncTask extends AsyncTask<TaskesModel, Void, Void> {
+public class DeleteAsyncTask extends AsyncTask<NotesModel, Void, Void> {
 
     TaskesDao taskesDao;
 
@@ -15,8 +16,8 @@ public class DeleteAsyncTask extends AsyncTask<TaskesModel, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(TaskesModel... taskes) {
-        taskesDao.deleteTask(taskes[0]);
+    protected Void doInBackground(NotesModel... notes) {
+        taskesDao.deleteNote(notes[0]);
         return null;
     }
 }

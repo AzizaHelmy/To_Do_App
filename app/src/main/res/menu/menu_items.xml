@@ -10,10 +10,6 @@
         android:icon="@drawable/ic_to_do_list__2_"
         android:title="Today's Taskes" />
     <item
-        android:id="@+id/completedTaskesFragment"
-        android:icon="@drawable/ic_to_do_list__2_"
-        android:title="Completed Taskes" />
-    <item
         android:id="@+id/stickyNotesFragment"
         android:icon="@drawable/ic_nots"
         android:title="Sticky Notes" />

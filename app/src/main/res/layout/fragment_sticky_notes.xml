@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#4A4747"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragments.StickyNotesFragment">
+    tools:context=".Fragments.Notes.StickyNotesFragment">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/notes_rv"
         android:layout_marginBottom="50dp"

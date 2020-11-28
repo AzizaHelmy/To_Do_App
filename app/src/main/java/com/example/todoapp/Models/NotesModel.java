@@ -17,9 +17,9 @@ public class NotesModel implements Serializable {
     private String date;
     private int optionMenu;
 
-    public NotesModel(String content, String titile, String date) {
-        this.content = content;
+    public NotesModel(String titile,String content,  String date) {
         this.titile = titile;
+        this.content = content;
         this.date = date;
     }
 

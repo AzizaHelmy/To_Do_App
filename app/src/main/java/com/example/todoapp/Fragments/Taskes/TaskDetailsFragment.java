@@ -1,15 +1,11 @@
-package com.example.todoapp.Fragments;
+package com.example.todoapp.Fragments.Taskes;
 
-import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
+import com.example.todoapp.AsyncTask.GetAsyncTask;
 import com.example.todoapp.BaseFragment;
 import com.example.todoapp.R;
+import com.example.todoapp.RoomDB.RoomFactory;
 
 
 public class TaskDetailsFragment extends BaseFragment {
@@ -21,7 +17,11 @@ public class TaskDetailsFragment extends BaseFragment {
 
     @Override
     public void initializeViews(View view) {
+       // getTask();
+    }
 
+    private void getTask() {
+        new GetAsyncTask(RoomFactory.getTaskessDb(getContext()).getTaskesDao()).execute();
     }
 
     @Override

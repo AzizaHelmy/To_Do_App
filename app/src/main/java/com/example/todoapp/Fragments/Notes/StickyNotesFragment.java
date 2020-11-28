@@ -1,7 +1,10 @@
-package com.example.todoapp.Fragments;
+package com.example.todoapp.Fragments.Notes;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
@@ -10,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.example.todoapp.Adapters.NotesAdapter;
+import com.example.todoapp.Async2.DeleteAsyncTask;
 import com.example.todoapp.Async2.GetAsyncTask;
 import com.example.todoapp.BaseFragment;
 import com.example.todoapp.Models.NotesModel;
@@ -37,9 +41,9 @@ public class StickyNotesFragment extends BaseFragment {
     public void initializeViews(View view) {
         fabNote = view.findViewById(R.id.note_fab);
         notesRv = view.findViewById(R.id.notes_rv);
-        getAllTaskes();
-        checkForTaskes();
-        setUpRecyclerView();
+        getAllNotes();
+        checkForNotes();
+        setUpRecyclerView(view);
     }
 
     @Override
@@ -67,14 +71,32 @@ public class StickyNotesFragment extends BaseFragment {
     }
 
     //==============================================
-    private void setUpRecyclerView() {
-        notesRv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-
-        notesAdapter = new NotesAdapter(notesList, getContext());
+    private void setUpRecyclerView(View v) {
+        //notesRv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        StaggeredGridLayoutManager layoutManager=new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        notesRv.setLayoutManager(layoutManager);
+        //layoutManager.setStackFromTop(true);
+        //layoutManager.setReverseLayout(true);
+        notesAdapter = new NotesAdapter(notesList, getContext(), new NotesAdapter.onViewClicked() {
+            @Override
+            public void onOPtionMenueClicked(View view, int position) {
+                notesAdapter.notifyDataSetChanged();
+//                PopupMenu menu = new PopupMenu(getContext(),v);
+//                menu.getMenu().add("Delete").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//                    @Override
+//                    public boolean onMenuItemClick(MenuItem item) {
+//                        deleteNote(item.getItemId());
+//
+//                        return false;
+//                    }
+//                });
+//                menu.show();
+            }
+        });
         notesRv.setAdapter(notesAdapter);
     }
     //=================================================
-    private void getAllTaskes() {
+    private void getAllNotes() {
         notesList.clear();
         try {
             notesList.addAll(new GetAsyncTask(RoomFactory.getTaskessDb(requireContext()).getTaskesDao()).execute().get());
@@ -86,7 +108,7 @@ public class StickyNotesFragment extends BaseFragment {
 
     }
     //=======================================
-    private void checkForTaskes() {
+    private void checkForNotes() {
 
         if (notesList.isEmpty()) {
             notesRv.setVisibility(View.GONE);
@@ -98,4 +120,12 @@ public class StickyNotesFragment extends BaseFragment {
     }
 
     //=======================================
+    private void deleteNote(int position) {
+        NotesModel note = notesList.get(position);
+        new DeleteAsyncTask(RoomFactory.getTaskessDb(requireContext()).getTaskesDao()).execute(note);
+        getAllNotes();
+        notesAdapter.notifyDataSetChanged();
+        checkForNotes();
+
+    }
 }

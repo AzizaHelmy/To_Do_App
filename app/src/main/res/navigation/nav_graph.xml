@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.todoapp.Fragments.HomeFragment"
+        android:name="com.example.todoapp.Fragments.Taskes.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -17,10 +17,13 @@
         <action
             android:id="@+id/action_homeFragment_to_taskDetailsFragment"
             app:destination="@id/taskDetailsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_editTaskFragment"
+            app:destination="@id/editTaskFragment" />
     </fragment>
     <fragment
         android:id="@+id/addTaskeFragment"
-        android:name="com.example.todoapp.Fragments.AddTaskeFragment"
+        android:name="com.example.todoapp.Fragments.Taskes.AddTaskeFragment"
         android:label="fragment_add_taske"
         tools:layout="@layout/fragment_add_taske" >
         <action
@@ -29,37 +32,55 @@
             app:enterAnim="@android:anim/slide_in_left" />
     </fragment>
     <fragment
-        android:id="@+id/completedTaskesFragment"
-        android:name="com.example.todoapp.Fragments.CompletedTaskesFragment"
-        android:label="fragment_completed_taskes"
-        tools:layout="@layout/fragment_completed_taskes" />
-    <fragment
         android:id="@+id/todayTaskesFragment"
         android:name="com.example.todoapp.Fragments.TodayTaskesFragment"
         android:label="fragment_today"
         tools:layout="@layout/fragment_today" />
     <fragment
         android:id="@+id/stickyNotesFragment"
-        android:name="com.example.todoapp.Fragments.StickyNotesFragment"
+        android:name="com.example.todoapp.Fragments.Notes.StickyNotesFragment"
         android:label="fragment_sticky_notes"
         tools:layout="@layout/fragment_sticky_notes" >
         <action
             android:id="@+id/action_stickyNotesFragment_to_addNotesFragment"
             app:destination="@id/addNotesFragment"
-            app:popEnterAnim="@anim/bottom_animation" />
+            app:popEnterAnim="@anim/top_animation" />
+        <action
+            android:id="@+id/action_stickyNotesFragment_to_editNoteFragment"
+            app:destination="@id/editNoteFragment" />
     </fragment>
     <fragment
         android:id="@+id/addNotesFragment"
-        android:name="com.example.todoapp.Fragments.AddNotesFragment"
+        android:name="com.example.todoapp.Fragments.Notes.AddNotesFragment"
         android:label="fragment_add_notes"
         tools:layout="@layout/fragment_add_notes" >
         <action
             android:id="@+id/action_addNotesFragment_to_stickyNotesFragment"
-            app:destination="@id/stickyNotesFragment" />
+            app:destination="@id/stickyNotesFragment"
+            app:enterAnim="@anim/bottom_animation"
+            app:popExitAnim="@anim/from_bottom_anim" />
     </fragment>
     <fragment
         android:id="@+id/taskDetailsFragment"
-        android:name="com.example.todoapp.Fragments.TaskDetailsFragment"
+        android:name="com.example.todoapp.Fragments.Taskes.TaskDetailsFragment"
         android:label="fragment_task_details"
         tools:layout="@layout/fragment_task_details" />
+    <fragment
+        android:id="@+id/editNoteFragment"
+        android:name="com.example.todoapp.Fragments.Notes.EditNoteFragment"
+        android:label="fragment_edit_note"
+        tools:layout="@layout/fragment_edit_note" >
+        <action
+            android:id="@+id/action_editNoteFragment_to_stickyNotesFragment"
+            app:destination="@id/stickyNotesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editTaskFragment"
+        android:name="com.example.todoapp.Fragments.Taskes.EditTaskFragment"
+        android:label="fragment_edit_task"
+        tools:layout="@layout/fragment_edit_task" >
+        <action
+            android:id="@+id/action_editTaskFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>
