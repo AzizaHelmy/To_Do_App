@@ -75,6 +75,7 @@ public class TaskesAdapter extends RecyclerView.Adapter<TaskesAdapter.AllTaskesV
             public void onClick(View v) {
                 crossOutTheTaske(holder);
 
+
             }
         });
 holder.itemView.setOnClickListener(new View.OnClickListener() {

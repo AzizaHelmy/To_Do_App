@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,12 +45,14 @@ public class HomeFragment extends BaseFragment {
     RecyclerView rvTaskes;
     TaskesAdapter taskesAdapter;
     List<TaskesModel> taskesList = new ArrayList<>();
-    TaskesModel reciveddate;
     Animation rotateOpenAnim, rotateCloseAnim, toBottomAnim, fromBottomAnim;
     FloatingActionButton addTaskButt;
     TextView task;
+    ImageView noTaskes;
+    ImageButton deleteAll;
     //swapping
     ItemTouchHelper.SimpleCallback simpleItemTouchCallback;
+    private TaskesModel taskesModel;
     private int notificationId;
 
     //============================================================
@@ -66,6 +70,9 @@ public class HomeFragment extends BaseFragment {
         fromBottomAnim = AnimationUtils.loadAnimation(getContext(), R.anim.from_bottom_anim);
         addTaskButt = view.findViewById(R.id.fab_butt);
         task = view.findViewById(R.id.task_tv);
+        deleteAll = view.findViewById(R.id.delet_all_ib);
+        noTaskes=view.findViewById(R.id.empty_iv);
+
         //RecyclerView
         rvTaskes = view.findViewById(R.id.all_taskes_rv);
 
@@ -79,14 +86,14 @@ public class HomeFragment extends BaseFragment {
         itemTouchHelper.attachToRecyclerView(rvTaskes);
     }
 
-    //===========================================================================
+    //===========================*Handling Back Button*=============================
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                requireActivity().finish();
+                requireActivity().finish();//to close the app
             }
         };
 
@@ -100,6 +107,30 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_addTaskeFragment);
+            }
+        });
+        deleteAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Delete All Tasks !");
+                builder.setMessage("Are you sure you want to delete All Task ?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        taskesList.clear();
+                        new DeleteAsyncTask(RoomFactory.getTaskessDb(requireContext()).getTaskesDao()).execute();
+
+                    }
+                });
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
     }
@@ -116,10 +147,15 @@ public class HomeFragment extends BaseFragment {
         taskesAdapter = new TaskesAdapter(taskesList, new TaskesAdapter.OnItemClick() {
             @Override
             public void onItemClicked(View view, int position) {
-//            String Task2show=task.getText().toString();
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable("sTask", Task2show);
-                Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_taskDetailsFragment);
+//
+
+                TaskesModel clickedTask = taskesList.get(position);
+//
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("sTask", clickedTask);
+                bundle.putSerializable("date", clickedTask);
+
+                Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_taskDetailsFragment, bundle);
             }
         }, new TaskesAdapter.OnViewClick() {
             @Override
@@ -155,15 +191,16 @@ public class HomeFragment extends BaseFragment {
                 int position = viewHolder.getAdapterPosition();
                 if (swipeDir == ItemTouchHelper.LEFT) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Delete Task");
+                    builder.setTitle("Delete Task !");
                     builder.setMessage("Are you sure you want to delete this Task?");
-                    builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             TaskesModel productModel = taskesList.get(position);
                             new DeleteAsyncTask(RoomFactory.getTaskessDb(requireContext()).getTaskesDao()).execute(productModel);
                             taskesList.remove(position);
                             taskesAdapter.notifyItemRemoved(position);
+                            checkForTaskes();
                         }
                     });
                     builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -178,13 +215,15 @@ public class HomeFragment extends BaseFragment {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setTitle("Edit Task !");
                     builder.setMessage("Are you sure you want to Edit this Task?");
-                    builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-//                            String Task2Edit=task.getText().toString();
-//                            Bundle bundle = new Bundle();
-//                            bundle.putSerializable("Task2Edit", Task2Edit);
-                            Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_editTaskFragment);
+
+                            TaskesModel clickedTask = taskesList.get(position);
+
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("Task2Edit", clickedTask);
+                            Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_editTaskFragment, bundle);
                         }
                     });
                     builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -255,9 +294,10 @@ public class HomeFragment extends BaseFragment {
 
         if (taskesList.isEmpty()) {
             rvTaskes.setVisibility(View.GONE);
-            // notesIv.setVisibility(View.VISIBLE);
+             noTaskes.setVisibility(View.VISIBLE);
+
         } else {
-            // notesIv.setVisibility(View.GONE);
+             noTaskes.setVisibility(View.GONE);
             rvTaskes.setVisibility(View.VISIBLE);
         }
     }

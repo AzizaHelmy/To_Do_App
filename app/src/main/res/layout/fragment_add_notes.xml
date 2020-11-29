@@ -9,7 +9,15 @@
     <!--#3C3B3B-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:background="#fff"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:background="#706c61">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:background="#706c61"
         android:layout_margin="7dp"
         android:layout_height="match_parent">
 
@@ -18,11 +26,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="120dp"
-            android:layout_marginLeft="9dp"
-            android:layout_marginRight="9dp"
+            android:hint="@string/hinttitil"
+            android:layout_marginLeft="15dp"
+            android:textColorHint="@color/white"
+            android:layout_marginRight="15dp"
             android:fontFamily="sans-serif"
             android:textColor="#fff"
             android:textSize="35dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             />
 
@@ -32,10 +44,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="260dp"
             android:fontFamily="sans-serif"
-            android:layout_marginEnd="9dp"
-            android:layout_marginStart="9dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:textColorHint="@color/white"
             android:textColor="#fff"
+            android:hint="@string/hintdetails"
             android:textSize="35dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
              />
 
@@ -48,7 +64,6 @@
             android:clickable="true"
             android:padding="3dp"
             android:shadowColor="#fff"
-
             android:shadowRadius="33"
             android:text="Add"
             android:textAllCaps="false"
@@ -58,5 +73,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/note_content_et" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
+    </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

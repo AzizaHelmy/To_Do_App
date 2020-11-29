@@ -3,8 +3,8 @@ package com.example.todoapp.Fragments.Notes;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
@@ -31,6 +31,7 @@ public class StickyNotesFragment extends BaseFragment {
     NotesAdapter notesAdapter;
     List<NotesModel> notesList = new ArrayList<>();
     FloatingActionButton fabNote;
+    ImageView emptyNotes;
 
     @Override
     public int getLayoutId() {
@@ -41,11 +42,13 @@ public class StickyNotesFragment extends BaseFragment {
     public void initializeViews(View view) {
         fabNote = view.findViewById(R.id.note_fab);
         notesRv = view.findViewById(R.id.notes_rv);
+        emptyNotes = view.findViewById(R.id.empty_iv);
         getAllNotes();
         checkForNotes();
         setUpRecyclerView(view);
     }
 
+    //===============================*Handling Back Button*====================================
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,13 +56,14 @@ public class StickyNotesFragment extends BaseFragment {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-              Navigation.findNavController(getView()).navigate(R.id.homeFragment);
+                Navigation.findNavController(getView()).navigate(R.id.homeFragment);
             }
         };
 
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
+    //========================================================================
     @Override
     public void setListeners() {
         fabNote.setOnClickListener(new View.OnClickListener() {
@@ -73,28 +77,28 @@ public class StickyNotesFragment extends BaseFragment {
     //==============================================
     private void setUpRecyclerView(View v) {
         //notesRv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        StaggeredGridLayoutManager layoutManager=new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         notesRv.setLayoutManager(layoutManager);
-        //layoutManager.setStackFromTop(true);
         //layoutManager.setReverseLayout(true);
         notesAdapter = new NotesAdapter(notesList, getContext(), new NotesAdapter.onViewClicked() {
             @Override
             public void onOPtionMenueClicked(View view, int position) {
                 notesAdapter.notifyDataSetChanged();
-//                PopupMenu menu = new PopupMenu(getContext(),v);
+                PopupMenu menu = new PopupMenu(getContext(), v);
 //                menu.getMenu().add("Delete").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 //                    @Override
 //                    public boolean onMenuItemClick(MenuItem item) {
 //                        deleteNote(item.getItemId());
-//
+//                        notesAdapter.notifyDataSetChanged();
 //                        return false;
 //                    }
 //                });
-//                menu.show();
+                menu.show();
             }
         });
         notesRv.setAdapter(notesAdapter);
     }
+
     //=================================================
     private void getAllNotes() {
         notesList.clear();
@@ -107,14 +111,15 @@ public class StickyNotesFragment extends BaseFragment {
         }
 
     }
+
     //=======================================
     private void checkForNotes() {
 
         if (notesList.isEmpty()) {
             notesRv.setVisibility(View.GONE);
-            // notesIv.setVisibility(View.VISIBLE);
+            emptyNotes.setVisibility(View.VISIBLE);
         } else {
-            // notesIv.setVisibility(View.GONE);
+            emptyNotes.setVisibility(View.GONE);
             notesRv.setVisibility(View.VISIBLE);
         }
     }

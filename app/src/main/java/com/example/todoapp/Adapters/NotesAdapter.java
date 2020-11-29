@@ -73,11 +73,16 @@ public  interface onViewClicked{
                 menu.getMenu().add("Edit").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        String content=holder.contentOfNote.getText().toString();
-                        String titile=holder.titileofNote.getText().toString();
+//                        String content=holder.contentOfNote.getText().toString();
+//                        String titile=holder.titileofNote.getText().toString();
+                        NotesModel notesModel1=notesList.get(position);
+////                        String Notecontent=notesModel.getContent();
+////                        String Notetitle=notesModel.getTitile();
+////                        String NoteDate=notesModel.getDate();
+
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("Azza", content);
-                        bundle.putSerializable("Azza",titile);
+                        bundle.putSerializable("Azza", notesModel);
+
                         Navigation.findNavController(v).navigate(R.id.action_stickyNotesFragment_to_editNoteFragment,bundle);
                         return false;
                     }
