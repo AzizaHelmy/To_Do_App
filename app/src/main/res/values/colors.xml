@@ -12,10 +12,25 @@
     <color name="pink">#E1B1AE</color>
     <color name="blue">#98D1D8</color>
     <color name="orang">#F69B7E</color>
-    <color name="yylow">#EFE8AD</color>
-    <color name="green">#B0F8B3</color>
+    <color name="yylow">#AEADA8</color>
+    <color name="green">#B5EDB7</color>
     <color name="ohh">#D8C3C3</color>
-    <color name="mint">#ADD3F1</color>
+    <color name="mint1">#ADD3F1</color>
+    <color name="mint2">#EAD8A3</color>
+    <color name="mint3">#B390F3</color>
+    <color name="mint4">#DFD36A</color>
+    <color name="mint6">#E1C08E</color>
+    <color name="mint7">#D8A7B8</color>
+    <color name="mint8">#FA6497</color>
+    <color name="mint9">#4FDCCE</color>
+    <color name="mint10">#9FAAEA</color>
+    <color name="mint11">#E5A8EF</color>
+    <color name="mint12">#6EBAF6</color>
+    <color name="mint13">#C9F19B</color>
+    <color name="mint14">#E4967E</color>
+    <color name="mint15">#5FB2F3</color>
+
+
 <!--#5E5959-->
 <!--b9ac92-->
 </resources>

@@ -12,11 +12,12 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
-import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 
 public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
-    NavigationView navigationView;
+    BottomNavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         initializeView();
-        setUpSideMenuIcon();
+        //setUpSideMenuIcon();
         //navigationView.setItemIconTintList(null);
         setUpNavCopmonentWithNavView();
 
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     //==========================================
     private void initializeView() {
-        drawerLayout = findViewById(R.id.drawer_layout);
+//        drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         navigationView.setItemIconTintList(null);
     }

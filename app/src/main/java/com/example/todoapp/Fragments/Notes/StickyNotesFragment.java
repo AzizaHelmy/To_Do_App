@@ -1,6 +1,8 @@
 package com.example.todoapp.Fragments.Notes;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -8,6 +10,7 @@ import android.widget.PopupMenu;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -81,18 +84,49 @@ public class StickyNotesFragment extends BaseFragment {
         notesRv.setLayoutManager(layoutManager);
         //layoutManager.setReverseLayout(true);
         notesAdapter = new NotesAdapter(notesList, getContext(), new NotesAdapter.onViewClicked() {
+
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onOPtionMenueClicked(View view, int position) {
                 notesAdapter.notifyDataSetChanged();
-                PopupMenu menu = new PopupMenu(getContext(), v);
-//                menu.getMenu().add("Delete").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//                    @Override
-//                    public boolean onMenuItemClick(MenuItem item) {
-//                        deleteNote(item.getItemId());
-//                        notesAdapter.notifyDataSetChanged();
-//                        return false;
-//                    }
-//                });
+
+                PopupMenu menu = null;
+
+                    menu = new PopupMenu(getContext(),view);
+
+                        menu.setGravity(Gravity.END);
+
+
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//
+//                }
+                menu.getMenu().add("Edit").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+//                        String content=holder.contentOfNote.getText().toString();
+//                        String titile=holder.titileofNote.getText().toString();
+                        NotesModel notesModel1 = notesList.get(position);
+////                        String Notecontent=notesModel.getContent();
+////                        String Notetitle=notesModel.getTitile();
+////                        String NoteDate=notesModel.getDate();
+
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("Azza", notesModel1);
+
+                        Navigation.findNavController(v).navigate(R.id.action_stickyNotesFragment_to_editNoteFragment, bundle);
+                        return false;
+                    }
+                });
+                menu.getMenu().add("Delete").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+
+                        deleteNote(position);
+                        notesAdapter.notifyItemRemoved(position);
+                        getAllNotes();
+                        return false;
+                    }
+                });
                 menu.show();
             }
         });

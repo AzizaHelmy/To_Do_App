@@ -6,9 +6,11 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.example.todoapp.AsyncTask.UpdateAsyncTask;
 import com.example.todoapp.BaseFragment;
 import com.example.todoapp.Models.TaskesModel;
 import com.example.todoapp.R;
+import com.example.todoapp.RoomDB.RoomFactory;
 
 
 public class TaskDetailsFragment extends BaseFragment {
@@ -39,6 +41,8 @@ public class TaskDetailsFragment extends BaseFragment {
             taskesModel = (TaskesModel) args.getSerializable("sTask");
             taskDetails.setText(taskesModel.getDetails());
             taskDate.setText(taskesModel.getDate());
+            checkBox.setChecked( taskesModel.isCkecked());
+           
 
         }
     }
@@ -51,12 +55,20 @@ public class TaskDetailsFragment extends BaseFragment {
 
             @Override
             public void onClick(View v) {
-               //check it's state first befor doing cross out
-                if (!taskDetails.getPaint().isStrikeThruText()) {
+                if(checkBox.isChecked()){
+                    taskesModel.setCkecked(true);
+                    checkBox.setChecked(true);
                     taskDetails.setPaintFlags(taskDetails.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                } else {
-                   taskDetails.setPaintFlags(taskDetails.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                    taskesModel.setCrossOut(true);
+                    new UpdateAsyncTask(RoomFactory.getTaskessDb(getContext()).getTaskesDao()).execute(taskesModel);
+                }else{
+                    taskesModel.setCkecked(false);
+                    checkBox.setChecked(false);
+                    taskDetails.setPaintFlags(taskDetails.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
+                    taskesModel.setCrossOut(false);
+                    new UpdateAsyncTask(RoomFactory.getTaskessDb(getContext()).getTaskesDao()).execute(taskesModel);
                 }
+
 
             }
         });

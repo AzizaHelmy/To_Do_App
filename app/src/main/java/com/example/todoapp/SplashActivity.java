@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private static final int SPLASH_SCREEN = 3000;
+    private static final int SPLASH_SCREEN = 2000;
     Animation topAnim, bottomAnim;
     ImageView image;
     TextView logo;
@@ -41,8 +41,8 @@ public class SplashActivity extends AppCompatActivity {
     private void setUpAnimation() {
         topAnim = AnimationUtils.loadAnimation(this, R.anim.top_animation);
         bottomAnim = AnimationUtils.loadAnimation(this, R.anim.bottom_animation);
-        image.setAnimation(topAnim);
-        logo.setAnimation(bottomAnim);
+        image.setAnimation(bottomAnim);
+       // logo.setAnimation(bottomAnim);
     }
     //============================================
     private void setUpSplashScreen() {
@@ -51,7 +51,7 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 Intent i = new Intent(SplashActivity.this, MainActivity.class);
                 startActivity(i);
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
                 finish();
             }
         }, SPLASH_SCREEN);

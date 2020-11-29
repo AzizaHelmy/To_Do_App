@@ -7,8 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
-import android.icu.text.Transliterator;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,17 +16,17 @@ import android.widget.TimePicker;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.todoapp.AsyncTask.UpdateAsyncTask;
 import com.example.todoapp.Models.TaskesModel;
 import com.example.todoapp.R;
 import com.example.todoapp.ReminderReceiver;
+import com.example.todoapp.RoomDB.RoomFactory;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
-
-import static android.content.Context.ALARM_SERVICE;
 
 public class TaskesAdapter extends RecyclerView.Adapter<TaskesAdapter.AllTaskesViewHolder> {
 
@@ -37,16 +35,8 @@ public class TaskesAdapter extends RecyclerView.Adapter<TaskesAdapter.AllTaskesV
     OnViewClick viewClicked;
     onBoxClick boxClicked;
     Context context;
-    public interface OnItemClick{
-        void onItemClicked(View view,int position);
-    }
-    public interface OnViewClick {
-        void onSwitchClick(View view, int position);
-    }
-
-    public interface onBoxClick {
-        void onCheackBokClicked(View view,int position);
-    }
+    AlarmManager alarmManager;
+    PendingIntent alarmIntent;
 
     public TaskesAdapter(List<TaskesModel> taskesList, OnItemClick itemClick, OnViewClick viewClicked, onBoxClick boxClicked, Context context) {
         this.taskesList = taskesList;
@@ -70,25 +60,50 @@ public class TaskesAdapter extends RecyclerView.Adapter<TaskesAdapter.AllTaskesV
         TaskesModel model = taskesList.get(position);
         holder.details.setText(model.getDetails());
         holder.date.setText(model.getDate());
+        holder.done.setChecked(model.isCkecked());
+        holder.remender.setChecked(model.isCkecked());
+        holder.details.getPaint();
+        model.isCrossOut();
         holder.done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                crossOutTheTaske(holder);
-
-
+                //crossOutTheTaske(holder);
+                // boxClicked.onCheackBokClicked(v,position);
+                if (holder.done.isChecked()) {
+                    model.setCkecked(true);
+                    holder.done.setChecked(true);
+                    holder.details.setPaintFlags(holder.details.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    model.setCrossOut(true);
+                    new UpdateAsyncTask(RoomFactory.getTaskessDb(context).getTaskesDao()).execute(model);
+                } else {
+                    model.setCkecked(false);
+                    holder.done.setChecked(false);
+                    holder.details.setPaintFlags(holder.details.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                    model.setCrossOut(false);
+                    new UpdateAsyncTask(RoomFactory.getTaskessDb(context).getTaskesDao()).execute(model);
+                }
             }
         });
-holder.itemView.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        itemClick.onItemClicked(v,position);
-    }
-});
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemClick.onItemClicked(v, position);
+            }
+        });
         holder.remender.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (holder.remender.isChecked()) {
+                    model.setCkecked(true);
+                    holder.remender.setChecked(true);
+                    showTimePickerDialog(holder);
+                    new UpdateAsyncTask(RoomFactory.getTaskessDb(context).getTaskesDao()).execute(model);
+                } else {
+                    model.setCkecked(false);
+                    holder.remender.setChecked(false);
+                    new UpdateAsyncTask(RoomFactory.getTaskessDb(context).getTaskesDao()).execute(model);
+                }
 
-                showTimePickerDialog(holder);
 
             }
         });
@@ -107,23 +122,42 @@ holder.itemView.setOnClickListener(new View.OnClickListener() {
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
                 Calendar calendar = Calendar.getInstance();
-//                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-//                calendar.set(Calendar.MINUTE, minute);
-//                calendar.set(Calendar.SECOND, 0);
                 calendar.set(0, 0, 0, view.getCurrentHour(), view.getCurrentMinute());
 
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm aa");
                 String reminderTime = simpleDateFormat.format(calendar.getTime());
+
+                AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                Intent intent = new Intent(context, ReminderReceiver.class);
+
+                PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                if (pendingIntent != null && alarmManager != null) {
+                    alarmManager.cancel(pendingIntent);
+                }
+
+                alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+
+
 //                Bundle bundle = new Bundle();
 //                bundle.putSerializable("Azza", reminderTime);
+                //BroadCastReciver
+                // Intent alertIntent = new Intent(context, ReminderReceiver.class);
 
-                Intent alertIntent = new Intent(context.getApplicationContext(), ReminderReceiver.class);
-                alertIntent.putExtra("spicificTime", reminderTime);
-                String task = holder.details.getText().toString();
-                alertIntent.putExtra("Taskmsg", task);
-                AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), PendingIntent.getBroadcast(context.getApplicationContext(), 0, alertIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT));
+
+//                alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+//                        SystemClock.elapsedRealtime() +
+//                                Integer.parseInt(reminderTime), alarmIntent);
+
+//                alarmIntent.putExtra("spicificTime", reminderTime);
+//                String task = holder.details.getText().toString();
+//                alertIntent.putExtra("Taskmsg", task);
+
+                /*alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                        SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_HALF_HOUR,
+                        AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);*/
+
+
+                alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
 
             }
         }, 12, 0, false);
@@ -150,7 +184,17 @@ holder.itemView.setOnClickListener(new View.OnClickListener() {
         }
     }
 
+    public interface OnItemClick {
+        void onItemClicked(View view, int position);
+    }
 
+    public interface OnViewClick {
+        void onSwitchClick(View view, int position);
+    }
+
+    public interface onBoxClick {
+        void onCheackBokClicked(View view, int position);
+    }
 
     //===========================*ViewHolder*=======================================
     class AllTaskesViewHolder extends RecyclerView.ViewHolder {
@@ -159,6 +203,7 @@ holder.itemView.setOnClickListener(new View.OnClickListener() {
         TextView date;
         MaterialCheckBox done;
         SwitchMaterial remender;
+
 
         public AllTaskesViewHolder(@NonNull View itemView) {
             super(itemView);

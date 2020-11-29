@@ -3,7 +3,9 @@ package com.example.todoapp.Models;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
 import java.io.Serializable;
+
 @Entity(tableName = "Taskes")
 public class TaskesModel implements Serializable {
 
@@ -14,14 +16,28 @@ public class TaskesModel implements Serializable {
     private String details;
     @ColumnInfo(name = "date")
     private String date;
+    @ColumnInfo(name = "checked")
     private boolean ckecked;
+    @ColumnInfo(name = "remender")
     private boolean remender;
+    @ColumnInfo(name = "crossOut")
+    private boolean crossOut;
 
-
-
-    public TaskesModel(String details, String date) {
+    public TaskesModel(String details, String date, boolean ckecked, boolean remender, boolean crossOut) {
         this.details = details;
         this.date = date;
+        this.ckecked = ckecked;
+        this.remender = remender;
+        this.crossOut = crossOut;
+    }
+
+
+    public boolean isCrossOut() {
+        return crossOut;
+    }
+
+    public void setCrossOut(boolean crossOut) {
+        this.crossOut = crossOut;
     }
 
     public long getId() {

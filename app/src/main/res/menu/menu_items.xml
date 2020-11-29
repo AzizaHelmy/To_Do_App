@@ -3,12 +3,8 @@
 
     <item
         android:id="@+id/homeFragment"
-        android:icon="@drawable/ic_to_do_list__1_"
-        android:title="All Taskes" />
-    <item
-        android:id="@+id/todayTaskesFragment"
         android:icon="@drawable/ic_to_do_list__4_"
-        android:title="Today's Taskes" />
+        android:title=" Taskes" />
     <item
         android:id="@+id/stickyNotesFragment"
         android:icon="@drawable/ic_nots"

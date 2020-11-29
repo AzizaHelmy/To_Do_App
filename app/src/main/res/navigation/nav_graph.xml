@@ -32,11 +32,6 @@
             app:enterAnim="@android:anim/slide_in_left" />
     </fragment>
     <fragment
-        android:id="@+id/todayTaskesFragment"
-        android:name="com.example.todoapp.Fragments.TodayTaskesFragment"
-        android:label="fragment_today"
-        tools:layout="@layout/fragment_today" />
-    <fragment
         android:id="@+id/stickyNotesFragment"
         android:name="com.example.todoapp.Fragments.Notes.StickyNotesFragment"
         android:label="fragment_sticky_notes"
@@ -44,6 +39,7 @@
         <action
             android:id="@+id/action_stickyNotesFragment_to_addNotesFragment"
             app:destination="@id/addNotesFragment"
+            app:enterAnim="@anim/top_animation"
             app:popEnterAnim="@anim/top_animation" />
         <action
             android:id="@+id/action_stickyNotesFragment_to_editNoteFragment"

@@ -50,6 +50,7 @@ public class HomeFragment extends BaseFragment {
     TextView task;
     ImageView noTaskes;
     ImageButton deleteAll;
+
     //swapping
     ItemTouchHelper.SimpleCallback simpleItemTouchCallback;
     private TaskesModel taskesModel;
@@ -70,12 +71,10 @@ public class HomeFragment extends BaseFragment {
         fromBottomAnim = AnimationUtils.loadAnimation(getContext(), R.anim.from_bottom_anim);
         addTaskButt = view.findViewById(R.id.fab_butt);
         task = view.findViewById(R.id.task_tv);
-        deleteAll = view.findViewById(R.id.delet_all_ib);
-        noTaskes=view.findViewById(R.id.empty_iv);
-
+        //deleteAll = view.findViewById(R.id.delet_all_ib);
+        noTaskes = view.findViewById(R.id.empty_iv);
         //RecyclerView
         rvTaskes = view.findViewById(R.id.all_taskes_rv);
-
 
         getAllTaskes();
         checkForTaskes();
@@ -109,30 +108,6 @@ public class HomeFragment extends BaseFragment {
                 Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_addTaskeFragment);
             }
         });
-        deleteAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Delete All Tasks !");
-                builder.setMessage("Are you sure you want to delete All Task ?");
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        taskesList.clear();
-                        new DeleteAsyncTask(RoomFactory.getTaskessDb(requireContext()).getTaskesDao()).execute();
-
-                    }
-                });
-                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
-        });
     }
 
     //=============================================================================
@@ -143,14 +118,11 @@ public class HomeFragment extends BaseFragment {
         mLayoutManager.setStackFromEnd(true);
         mLayoutManager.setReverseLayout(true);
         // rvTaskes.addItemDecoration(new DividerItemDecoration(getContext(),LinearLayoutManager.VERTICAL));
-
         taskesAdapter = new TaskesAdapter(taskesList, new TaskesAdapter.OnItemClick() {
             @Override
             public void onItemClicked(View view, int position) {
-//
 
                 TaskesModel clickedTask = taskesList.get(position);
-//
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("sTask", clickedTask);
                 bundle.putSerializable("date", clickedTask);
@@ -168,11 +140,13 @@ public class HomeFragment extends BaseFragment {
         }, new TaskesAdapter.onBoxClick() {
             @Override
             public void onCheackBokClicked(View view, int position) {
-                //update the change that happen on the text and cheack box
-                //this mean that the state must be saved first??
+                TaskesModel model = taskesList.get(position);
+
+
             }
         }, requireContext());
         rvTaskes.setAdapter(taskesAdapter);
+        taskesAdapter.notifyDataSetChanged();
     }
 
     //==============================================================================
@@ -294,10 +268,10 @@ public class HomeFragment extends BaseFragment {
 
         if (taskesList.isEmpty()) {
             rvTaskes.setVisibility(View.GONE);
-             noTaskes.setVisibility(View.VISIBLE);
+            noTaskes.setVisibility(View.VISIBLE);
 
         } else {
-             noTaskes.setVisibility(View.GONE);
+            noTaskes.setVisibility(View.GONE);
             rvTaskes.setVisibility(View.VISIBLE);
         }
     }
