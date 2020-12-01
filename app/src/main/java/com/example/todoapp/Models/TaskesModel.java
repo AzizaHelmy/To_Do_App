@@ -21,9 +21,9 @@ public class TaskesModel implements Serializable {
     @ColumnInfo(name = "remender")
     private boolean remender;
     @ColumnInfo(name = "crossOut")
-    private boolean crossOut;
+    private int crossOut ;
 
-    public TaskesModel(String details, String date, boolean ckecked, boolean remender, boolean crossOut) {
+    public TaskesModel(String details, String date, boolean ckecked, boolean remender, int crossOut) {
         this.details = details;
         this.date = date;
         this.ckecked = ckecked;
@@ -31,12 +31,11 @@ public class TaskesModel implements Serializable {
         this.crossOut = crossOut;
     }
 
-
-    public boolean isCrossOut() {
+    public int getCrossOut() {
         return crossOut;
     }
 
-    public void setCrossOut(boolean crossOut) {
+    public void setCrossOut(int crossOut) {
         this.crossOut = crossOut;
     }
 

@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="55dp"
+        android:layout_marginBottom="59dp"
         android:background="#706c61">
     <ScrollView
         android:layout_width="match_parent"

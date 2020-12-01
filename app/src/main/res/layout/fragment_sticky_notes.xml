@@ -41,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="59dp"
-        app:tint="@color/white"
+        app:tint="#000"
         android:src="@drawable/ic_baseline_add_24"
         app:fab_shadow="true"
         app:fab_shadowColor="@color/purple_700"

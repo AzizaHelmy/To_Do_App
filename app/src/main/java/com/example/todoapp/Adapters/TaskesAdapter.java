@@ -28,6 +28,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import static android.content.Context.ALARM_SERVICE;
+
 public class TaskesAdapter extends RecyclerView.Adapter<TaskesAdapter.AllTaskesViewHolder> {
 
     List<TaskesModel> taskesList;
@@ -37,6 +39,7 @@ public class TaskesAdapter extends RecyclerView.Adapter<TaskesAdapter.AllTaskesV
     Context context;
     AlarmManager alarmManager;
     PendingIntent alarmIntent;
+    Calendar calendar;
 
     public TaskesAdapter(List<TaskesModel> taskesList, OnItemClick itemClick, OnViewClick viewClicked, onBoxClick boxClicked, Context context) {
         this.taskesList = taskesList;
@@ -61,28 +64,36 @@ public class TaskesAdapter extends RecyclerView.Adapter<TaskesAdapter.AllTaskesV
         holder.details.setText(model.getDetails());
         holder.date.setText(model.getDate());
         holder.done.setChecked(model.isCkecked());
-        holder.remender.setChecked(model.isCkecked());
-        holder.details.getPaint();
-        model.isCrossOut();
+        holder.remender.setChecked(model.isRemender());
+
+        if (model.getCrossOut() == 1) {
+            holder.details.setPaintFlags(holder.details.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            new UpdateAsyncTask(RoomFactory.getTaskessDb(context).getTaskesDao()).execute(model);
+        } else {
+            holder.details.setPaintFlags(holder.details.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            new UpdateAsyncTask(RoomFactory.getTaskessDb(context).getTaskesDao()).execute(model);
+        }
+
         holder.done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //crossOutTheTaske(holder);
-                // boxClicked.onCheackBokClicked(v,position);
+
                 if (holder.done.isChecked()) {
                     model.setCkecked(true);
                     holder.done.setChecked(true);
                     holder.details.setPaintFlags(holder.details.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                    model.setCrossOut(true);
+                    model.setCrossOut(1);
                     new UpdateAsyncTask(RoomFactory.getTaskessDb(context).getTaskesDao()).execute(model);
                 } else {
                     model.setCkecked(false);
                     holder.done.setChecked(false);
                     holder.details.setPaintFlags(holder.details.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                    model.setCrossOut(false);
+                    model.setCrossOut(0);
                     new UpdateAsyncTask(RoomFactory.getTaskessDb(context).getTaskesDao()).execute(model);
                 }
+
             }
+
         });
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,17 +105,16 @@ public class TaskesAdapter extends RecyclerView.Adapter<TaskesAdapter.AllTaskesV
             @Override
             public void onClick(View v) {
                 if (holder.remender.isChecked()) {
-                    model.setCkecked(true);
+                    model.setRemender(true);
                     holder.remender.setChecked(true);
-                    showTimePickerDialog(holder);
                     new UpdateAsyncTask(RoomFactory.getTaskessDb(context).getTaskesDao()).execute(model);
+                    showTimePickerDialog(holder);
+
                 } else {
-                    model.setCkecked(false);
+                    model.setRemender(false);
                     holder.remender.setChecked(false);
                     new UpdateAsyncTask(RoomFactory.getTaskessDb(context).getTaskesDao()).execute(model);
                 }
-
-
             }
         });
     }
@@ -120,47 +130,23 @@ public class TaskesAdapter extends RecyclerView.Adapter<TaskesAdapter.AllTaskesV
         TimePickerDialog timePickerDialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(0, 0, 0, view.getCurrentHour(), view.getCurrentMinute());
+                // timePickerDialog=new TimePickerDialog(context, ,c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false);
+                calendar = Calendar.getInstance();
+                calendar.set(0, 0, 0, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
 
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm aa");
                 String reminderTime = simpleDateFormat.format(calendar.getTime());
-
-                AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                Intent intent = new Intent(context, ReminderReceiver.class);
-
-                PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                if (pendingIntent != null && alarmManager != null) {
-                    alarmManager.cancel(pendingIntent);
-                }
-
-                alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
-
-
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable("Azza", reminderTime);
-                //BroadCastReciver
-                // Intent alertIntent = new Intent(context, ReminderReceiver.class);
-
-
-//                alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-//                        SystemClock.elapsedRealtime() +
-//                                Integer.parseInt(reminderTime), alarmIntent);
-
-//                alarmIntent.putExtra("spicificTime", reminderTime);
-//                String task = holder.details.getText().toString();
-//                alertIntent.putExtra("Taskmsg", task);
-
-                /*alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                        SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_HALF_HOUR,
-                        AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);*/
-
-
-                alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
+                //int myTime =Integer.parseInt(reminderTime);
+                Intent alertIntent = new Intent(context, ReminderReceiver.class);
+                alertIntent.putExtra("spicificTime", reminderTime);
+                String task = holder.details.getText().toString();
+                alertIntent.putExtra("Taskmsg", task);
+                PendingIntent pintent = PendingIntent.getBroadcast(context, 0, alertIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 1000 * 60 * 1, pintent);
 
             }
-        }, 12, 0, false);
+        }, Calendar.getInstance().get(Calendar.HOUR_OF_DAY), Calendar.getInstance().get(Calendar.MINUTE), false);
 
         timePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
             @Override
@@ -169,9 +155,6 @@ public class TaskesAdapter extends RecyclerView.Adapter<TaskesAdapter.AllTaskesV
             }
         });
 
-
-        //display previous selected time
-        // timePickerDialog.updateTime();
         timePickerDialog.show();
     }
 
@@ -184,6 +167,7 @@ public class TaskesAdapter extends RecyclerView.Adapter<TaskesAdapter.AllTaskesV
         }
     }
 
+    //=========================================================================
     public interface OnItemClick {
         void onItemClicked(View view, int position);
     }

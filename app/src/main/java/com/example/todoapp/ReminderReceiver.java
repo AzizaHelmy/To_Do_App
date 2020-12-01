@@ -28,7 +28,7 @@ public class ReminderReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
        // time = intent.getStringExtra("spicificTime");
-        Remembertaske = intent.getStringExtra("Taske");
+        Remembertaske = intent.getStringExtra("Taskmsg");
 
         createNotificationChannel(context);
         showNotification(context);
@@ -41,9 +41,9 @@ public class ReminderReceiver extends BroadcastReceiver {
 
         Intent snoozeIntent = new Intent(context, ReminderReceiver.class);
         //snoozeIntent.setAction(ACTION_SNOOZE);
-        snoozeIntent.putExtra(EXTRA_NOTIFICATION_ID, 0);
-        PendingIntent snoozePendingIntent =
-                PendingIntent.getBroadcast(context, 0, snoozeIntent, 0);
+//        snoozeIntent.putExtra(EXTRA_NOTIFICATION_ID, 0);
+//        PendingIntent snoozePendingIntent =
+//                PendingIntent.getBroadcast(context, 0, snoozeIntent, 0);
 
         Intent intent = new Intent(context, HomeFragment.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
@@ -51,9 +51,9 @@ public class ReminderReceiver extends BroadcastReceiver {
         builder.setSmallIcon(R.drawable.ic_baseline_notification_important_24);
         builder.setWhen(System.currentTimeMillis());
         builder.setContentTitle("Remeber !");
-        builder.setContentText(" it's Time to do this Taske :" + "\n" + Remembertaske);
+        builder.setContentText(" it's Time to do this Taske : "  + Remembertaske);
 //        builder.addAction(R.drawable.ic_baseline_snooze_24, context.getString(R.string.snooze),
-//                snoozePendingIntent);
+//               snoozePendingIntent);
         builder.addAction(R.drawable.ic_baseline_snooze_24, context.getString(R.string.ok), pendingIntent);
         builder.addAction(R.drawable.ic_baseline_notification_important_24, context.getString(R.string.snooz), null);
        // builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_to_do_list));
@@ -63,7 +63,7 @@ public class ReminderReceiver extends BroadcastReceiver {
         builder.setContentIntent(pendingIntent)
                 .setAutoCancel(false);
         builder.setDefaults(NotificationCompat.DEFAULT_SOUND);
-        builder.setDefaults(NotificationCompat.DEFAULT_VIBRATE);
+       // builder.setDefaults(NotificationCompat.DEFAULT_VIBRATE);
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(notificationId, builder.build());
 //

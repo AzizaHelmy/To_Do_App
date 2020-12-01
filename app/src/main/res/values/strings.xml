@@ -9,6 +9,6 @@
 
     <string name="channel_description" />
     <string name="ok">  ok <font size="21"></font></string>
-    <string name="snooz">snooze</string>
+    <string name="snooz">Cancel</string>
     <string name="snooze"></string>
 </resources>

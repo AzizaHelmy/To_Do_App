@@ -1,6 +1,7 @@
 package com.example.todoapp.Fragments.Taskes;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -133,9 +134,6 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onSwitchClick(View view, int position) {
 
-                //   NavController navController=Navigation.findNavController(R.id.homeFragment, ReminderReceiver.class);
-                //PendingIntent pendingIntent=PendingIntent.getBroadcast(getContext(),0,navController,PendingIntent.FLAG_CANCEL_CURRENT);
-                //AlarmManager alarmManager=get
             }
         }, new TaskesAdapter.onBoxClick() {
             @Override
@@ -167,6 +165,8 @@ public class HomeFragment extends BaseFragment {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setTitle("Delete Task !");
                     builder.setMessage("Are you sure you want to delete this Task?");
+
+
                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -184,6 +184,7 @@ public class HomeFragment extends BaseFragment {
                         }
                     });
                     AlertDialog dialog = builder.create();
+                    dialog.setCanceledOnTouchOutside(false);
                     dialog.show();
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -207,8 +208,10 @@ public class HomeFragment extends BaseFragment {
                         }
                     });
                     AlertDialog dialog = builder.create();
+                    dialog.setCanceledOnTouchOutside(false);
                     dialog.show();
                 }
+
 
             }
 

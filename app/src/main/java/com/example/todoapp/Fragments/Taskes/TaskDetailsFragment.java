@@ -41,8 +41,14 @@ public class TaskDetailsFragment extends BaseFragment {
             taskesModel = (TaskesModel) args.getSerializable("sTask");
             taskDetails.setText(taskesModel.getDetails());
             taskDate.setText(taskesModel.getDate());
-            checkBox.setChecked( taskesModel.isCkecked());
-           
+            checkBox.setChecked(taskesModel.isCkecked());
+            if (taskesModel.getCrossOut() == 1) {
+               taskDetails.setPaintFlags(taskDetails.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                new UpdateAsyncTask(RoomFactory.getTaskessDb(getContext()).getTaskesDao()).execute(taskesModel);
+            } else {
+                taskDetails.setPaintFlags(taskDetails.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                new UpdateAsyncTask(RoomFactory.getTaskessDb(getContext()).getTaskesDao()).execute(taskesModel);
+            }
 
         }
     }
@@ -55,17 +61,17 @@ public class TaskDetailsFragment extends BaseFragment {
 
             @Override
             public void onClick(View v) {
-                if(checkBox.isChecked()){
+                if (checkBox.isChecked()) {
                     taskesModel.setCkecked(true);
                     checkBox.setChecked(true);
                     taskDetails.setPaintFlags(taskDetails.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                    taskesModel.setCrossOut(true);
+                    taskesModel.setCrossOut(1);
                     new UpdateAsyncTask(RoomFactory.getTaskessDb(getContext()).getTaskesDao()).execute(taskesModel);
-                }else{
+                } else {
                     taskesModel.setCkecked(false);
                     checkBox.setChecked(false);
-                    taskDetails.setPaintFlags(taskDetails.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
-                    taskesModel.setCrossOut(false);
+                    taskDetails.setPaintFlags(taskDetails.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                    taskesModel.setCrossOut(0);
                     new UpdateAsyncTask(RoomFactory.getTaskessDb(getContext()).getTaskesDao()).execute(taskesModel);
                 }
 

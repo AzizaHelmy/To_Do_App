@@ -47,7 +47,7 @@ public class AddTaskeFragment extends BaseFragment {
                 bundle.putSerializable("Azza",dateTime);
                 bundle.putSerializable("Azza",task);
 
-                new InsertAsyncTask(RoomFactory.getTaskessDb(requireContext()).getTaskesDao()).execute(new TaskesModel(task,dateTime,false,false,false));
+                new InsertAsyncTask(RoomFactory.getTaskessDb(requireContext()).getTaskesDao()).execute(new TaskesModel(task,dateTime,false,false,0));
 
                 Navigation.findNavController(v).navigate(R.id.action_addTaskeFragment_to_homeFragment,bundle);
             }

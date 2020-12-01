@@ -68,36 +68,21 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
     //=======================================================================
     private int getRandemColor() {
         List<Integer> colorCode = new ArrayList<>();
-        colorCode.add(R.color.blue);
-        colorCode.add(R.color.yello);
-        colorCode.add(R.color.green);
         colorCode.add(R.color.ohh);
         colorCode.add(R.color.orang);
-        colorCode.add(R.color.move);
-        colorCode.add(R.color.mint1);
         colorCode.add(R.color.mint2);
-        colorCode.add(R.color.mint11);
-        colorCode.add(R.color.mint3);
-        colorCode.add(R.color.mint4);
         colorCode.add(R.color.yylow);
         colorCode.add(R.color.mint6);
         colorCode.add(R.color.mint7);
         colorCode.add(R.color.mint8);
-        colorCode.add(R.color.mint9);
         colorCode.add(R.color.mint10);
-        colorCode.add(R.color.mint12);
-        colorCode.add(R.color.mint13);
         colorCode.add(R.color.mint14);
         colorCode.add(R.color.mint7);
         colorCode.add(R.color.mint6);
-        colorCode.add(R.color.mint15);
-        colorCode.add(R.color.mint1);
         colorCode.add(R.color.yylow);
-        colorCode.add(R.color.blue);
         colorCode.add(R.color.ohh);
         colorCode.add(R.color.orang);
         colorCode.add(R.color.yylow);
-        colorCode.add(R.color.green);
         Random randemColor = new Random();
         int number = randemColor.nextInt(colorCode.size());
         return colorCode.get(number);

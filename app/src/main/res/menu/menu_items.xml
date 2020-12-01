@@ -7,6 +7,6 @@
         android:title=" Taskes" />
     <item
         android:id="@+id/stickyNotesFragment"
-        android:icon="@drawable/ic_nots"
+        android:icon="@drawable/ic_sticky_note"
         android:title="Sticky Notes" />
 </menu>
